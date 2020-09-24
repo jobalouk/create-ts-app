@@ -1,5 +1,5 @@
 {
-  "name": "start-ts-project",
+  "name": "create-ts-app",
   "version": "1.0.0",
   "description": "",
   "main": "./src/main.js",
@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "start-ts-project": "./bin/main.js",
-    "@jbalouka/start-ts-project": "./bin/main.js"
+    "create-ts-app": "./bin/main.js",
+    "@jbalouka/create-ts-app": "./bin/main.js"
   },
   "keywords": [],
   "author": "",
