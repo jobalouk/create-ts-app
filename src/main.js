@@ -10,31 +10,24 @@ import {projectInstall} from 'pkg-install';
 const access = promisify(fs.access);
 const copy = promisify(ncp);
 
-async function copyTemplateFiles(options) {
- return copy(options.templateDirectory, options.targetDirectory, {
+
+async function copyTemplateFiles(opts) {
+ return copy(opts.templateDirectory, opts.targetDirectory, {
    clobber: false,
  });
 }
 
-async function initGit(options) {
-  const result = await execa('git', ['init'], {
-   cwd: options.targetDirectory,
-  });
-  if (result.failed) {
-   return Promise.reject(new Error('Failed to initialize git'));
-  }
-  return;
-}
 
-export async function createProject(options) {
-  options = {
-   ...options,
-   targetDirectory: options.targetDirectory || process.cwd(),
+async function createProject() {
+
+  const opts = {
+    targetDirectory: process.cwd(),
+    template: 'typescript',
   };
 
   const currentFileUrl = import.meta.url;
-  const templateDir = path.resolve(new URL(currentFileUrl).pathname, '../../templates', options.template.toLowerCase());
-  options.templateDirectory = templateDir;
+  const templateDir = path.resolve(new URL(currentFileUrl).pathname, '../../templates', opts.template);
+  opts.templateDirectory = templateDir;
 
   try {
    await access(templateDir, fs.constants.R_OK);
@@ -46,31 +39,19 @@ export async function createProject(options) {
   const tasks = new Listr([
     {
       title: 'Copy project files',
-      task: () => copyTemplateFiles(options),
-    },
-    {
-      title: 'Initialize git',
-      task: () => initGit(options),
-      enabled: () => options.git,
-    },
-    {
-      title: 'Initialize project',
-      task: () => initproject(options),
+      task: () => copyTemplateFiles(opts),
     },
     {
       title: 'Install dependencies',
-      task: () =>
-        projectInstall({
-          cwd: options.targetDirectory,
-        }),
-      skip: () =>
-        !options.runInstall
-          ? 'Pass --install to automatically install dependencies'
-          : undefined,
+      task: () => projectInstall({cwd: opts.targetDirectory}),
     },
   ]);
 
   await tasks.run();
-  console.log('%s Project ready', chalk.green.bold('DONE'));
+  console.log('%s Project ready', chalk.green.bold('done'));
   return true;
+}
+
+export async function main() {
+  await createProject();
 }

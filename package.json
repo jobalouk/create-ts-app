@@ -2,13 +2,13 @@
   "name": "start-ts-project",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.js",
+  "main": "./src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "start-ts-project": "./bin/cli.js",
-    "@jbalouka/start-ts-project": "./bin/cli.js"
+    "start-ts-project": "./bin/main.js",
+    "@jbalouka/start-ts-project": "./bin/main.js"
   },
   "keywords": [],
   "author": "",
